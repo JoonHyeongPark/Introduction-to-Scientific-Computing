@@ -41,14 +41,14 @@ function hybrid_method(square_dimension, matrix, b_vector)
     
     for j = i + 1 : square_dimension, # row elimination using diagonal pivot.
       multiplier = augmented_matrix(row_pointer(j), i) / augmented_matrix(row_pointer(i), i);
-      augmented_matrix(row_pointer(j), :) -= multiplier * augmented_matrix(row_pointer(i), :);
+      augmented_matrix(row_pointer(j), i : square_dimension + 1) -= multiplier * augmented_matrix(row_pointer(i), i : square_dimension + 1);
     end;
 
     # if you want more accuracy, use complete pivotting not partial pivotting.
     # just calculate row max again in here.
     # if you add this code below, you can get more accuracy but less speed using complete pivotting.
     
-    # for j = 1 : square_dimension, row_max(j) = max(abs(matrix(j,:))); end; row_max;
+    # for j = i + 1 : square_dimension, row_max(row_pointer(j)) = max(abs(augmented_matrix(row_pointer(j), i + 1 : square_dimension))); end;
     
   end;
   
@@ -71,7 +71,8 @@ function hybrid_method(square_dimension, matrix, b_vector)
     
     for j = 1 : i, # reduce column using diagonal pivot.
         multiplier = augmented_matrix(row_pointer(j), i + 1) / pivot;
-        augmented_matrix(row_pointer(j),:) -= augmented_matrix(row_pointer(i + 1),:) * multiplier;
+        augmented_matrix(row_pointer(j), i + 1) = 0; # A[NROW[j]][i + 1] = A[NROW[j]][i + 1] - A[NROW[j]][i + 1] / A[NROW[i + 1]][i + 1] * A[NROW[i + 1]][i + 1] is obviously zero.
+        augmented_matrix(row_pointer(j), square_dimension + 1) -= augmented_matrix(row_pointer(i + 1), square_dimension + 1) * multiplier;
     end;
     
   end;

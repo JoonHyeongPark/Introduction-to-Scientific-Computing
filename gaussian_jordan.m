@@ -48,7 +48,7 @@ function gaussian_jordan(square_dimension, matrix, b_vector)
         pivot = augmented_matrix(row_pointer(i), i);
         
         multiplier = augmented_matrix(row_pointer(j), i) / pivot;
-        augmented_matrix(row_pointer(j),:) -= multiplier * augmented_matrix(row_pointer(i),:); # to eliminate column, excute row operation.
+        augmented_matrix(row_pointer(j), i : square_dimension + 1) -= multiplier * augmented_matrix(row_pointer(i), i : square_dimension + 1); # to eliminate i-th column, excute row operation.
         
       end;
       
@@ -62,7 +62,7 @@ function gaussian_jordan(square_dimension, matrix, b_vector)
     # just calculate row max again in here.
     # if you add this code below, you can get more accuracy but less speed using complete pivotting.
     
-    # for j = 1 : square_dimension, row_max(j) = max(abs(matrix(j,:))); end; row_max;
+    # for j = i + 1 : square_dimension, row_max(row_pointer(j)) = max(abs(augmented_matrix(row_pointer(j), i + 1 : square_dimension))); end;
     
   end;
 
